@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<header>
+  <div class="container navbar">
+    <img src="images/ChatGPT Image 5 окт. 2025 г., 18_19_09.png" class="logo" alt="Logo">
+    <nav id="navbar">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contacts.html">Contacts</a>
+      <span id="nav-links"></span>
+    </nav>
+    <div class="lang-switch">
+      <button id="langRu">RU</button>
+      <button id="langEn">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="container guide-profile">
+  <div class="guide-card">
+    <img src="images/default-avatar.png" class="guide-photo" id="avatar">
+    <div class="guide-info">
+      <h2 id="username">Username</h2>
+      <p id="email">Email: user@example.com</p>
+      <p>Role: <span id="role">user</span></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Nomad Elite Travel</p>
+  <div class="footer-content">
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-whatsapp"></i></a>
+    <a href="#"><i class="fab fa-snapchat"></i></a>
+    <a href="#"><i class="fab fa-facebook"></i></a>
+  </div>
+</footer>
+
+<script>
+// Navbar
+(function renderNavbar() {
+  const navLinks = document.getElementById("nav-links");
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navLinks.innerHTML = `<a href="login.html">Login</a><a href="register.html">Register</a>`;
+  } else {
+    let email = "";
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      email = payload.email;
+    } catch {
+      localStorage.removeItem("token");
+    }
+    navLinks.innerHTML = `<span style="margin-left:10px; margin-right:10px;">${email}</span>
+      <a href="profile.html">Profile</a>
+      <a href="#" id="logoutBtn">Logout</a>`;
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    });
+  }
+})();
+
+// Load profile
+window.addEventListener('DOMContentLoaded', async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+  try {
+    const res = await fetch("/profile", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    document.getElementById("username").textContent = data.user.email;
+    document.getElementById("email").textContent = "Email: " + data.user.email;
+    document.getElementById("role").textContent = data.user.role || "user";
+  } catch (err) {
+    console.error(err);
+  }
+});
+</script>
+</body>
+</html>

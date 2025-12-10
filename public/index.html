@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title data-i18n="home_title"></title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<header>
+  <div class="container navbar">
+    <img src="images/ChatGPT Image 5 окт. 2025 г., 18_19_09.png" class="logo" alt="Logo">
+
+    <!-- Начало динамического navbar -->
+    <nav id="navbar">
+      <a href="index.html" data-i18n="nav_home"></a>
+      <a href="about.html" data-i18n="nav_about"></a>
+      <a href="contacts.html" data-i18n="nav_contacts"></a>
+      <span id="nav-links"></span>
+    </nav>
+    <!-- Конец динамического navbar -->
+
+    <div class="lang-switch">
+      <button id="langRu">RU</button>
+      <button id="langEn">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <h1 data-i18n="welcome"></h1>
+  <div class="search-box">
+    <input type="text" id="search" data-i18n-placeholder="search_placeholder">
+  </div>
+  <div class="cards">
+    <div class="card"><a href="tours/shymbulak.html"><img src="https://life09.kz/sites/default/files/articles/3-EW2E8227.jpg-1529641517.jpg"><h2 data-i18n="shymbulak"></h2><p data-i18n="shymbulak_desc"></p></a></div>
+    <div class="card"><a href="tours/kolsai.html"><img src="https://www.zakon.kz/pbi/WEBP/2025-06-03/file-b23d4183-c2b8-4fa1-93b6-cc5a2c5266e2/800x450.orig.webp"><h2 data-i18n="kolsai"></h2><p data-i18n="kolsai_desc"></p></a></div>
+    <div class="card"><a href="tours/kaindy.html"><img src="https://7d9e88a8-f178-4098-bea5-48d960920605.selcdn.net/e4cc0662-5f57-4ecd-aa66-0ea28771661e/-/format/webp/-/quality/smart_retina/-/stretch/off/-/resize/900x/"><h2 data-i18n="kaindy"></h2><p data-i18n="kaindy_desc"></p></a></div>
+    <div class="card"><a href="tours/canyon.html"><img src="https://gtravel.kz/wp-content/uploads/2019/08/chkk_3_1.jpg"><h2 data-i18n="canyon"></h2><p data-i18n="canyon_desc"></p></a></div>
+    <div class="card"><a href="tours/koktobe.html"><img src="https://koktobe.com/storage/pages/November2024/klBBnCo5TEeZqwBl91rJ.jpg"><h2 data-i18n="koktobe"></h2><p data-i18n="koktobe_desc"></p></a></div>
+    <div class="card"><a href="tours/almarasan.html"><img src="https://tengrinews.kz/userdata/map/97a4baa61d8e2fe5d14bed43949d282e.jpeg"><h2 data-i18n="almarasan"></h2><p data-i18n="almarasan_desc"></p></a></div>
+    <div class="card"><a href="tours/issyk.html"><img src="https://grandevoyage.kz/wp-content/uploads/2020/10/1573013863_ozero-issyk-almaty-ekskursii-1.jpg"><h2 data-i18n="issyk"></h2><p data-i18n="issyk_desc"></p></a></div>
+    <div class="card"><a href="tours/city.html"><img src="https://sputnik.kz/img/13/01/130132_217:0:1072:641_1920x0_80_0_0_61ee904649e72affed9811475aa81e55.jpg"><h2 data-i18n="city"></h2><p data-i18n="city_desc"></p></a></div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Nomad Elite Travel</p>
+  <div class="footer-content">
+    <a href="https://www.instagram.com/mad4error/"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/77767679591"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://snapchat.com/t/Cqsk5p3j"><i class="fab fa-snapchat"></i></a>
+    <a href="https://www.facebook.com/people/Akmels-Galymzhan/pfbid0vpmCv8y9qNzcDWWVwEgpsadu8pV4GWTUFUuMfHfbtBhf1vWvULS7JWgDjWVhCSMNl/?mibextid=wwXIfr&rdid=nxUlsjVI3VxPwnwo&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CFzrWzSvq%2F%3Fmibextid%3DwwXIfr"><i class="fab fa-facebook"></i></a>
+  </div>
+</footer>
+
+<script src="js/lang.js"></script>
+<script src="js/search.js" defer></script>
+
+<!-- Скрипт динамического navbar -->
+<script>
+(function renderNavbar() {
+  const navLinks = document.getElementById("nav-links");
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    navLinks.innerHTML = `
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    `;
+  } else {
+    let email = "";
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      email = payload.email;
+    } catch (e) {
+      console.error("Invalid token");
+      localStorage.removeItem("token");
+    }
+
+    navLinks.innerHTML = `
+      <span style="margin-left:10px; margin-right:10px;">${email}</span>
+      <a href="profile.html">Profile</a>
+      <a href="#" id="logoutBtn">Logout</a>
+    `;
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

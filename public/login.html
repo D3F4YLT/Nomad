@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+  <div class="container navbar">
+    <img src="images/ChatGPT Image 5 окт. 2025 г., 18_19_09.png" class="logo" alt="Logo">
+    <nav id="navbar">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contacts.html">Contacts</a>
+      <span id="nav-links"></span>
+    </nav>
+  </div>
+</header>
+
+<div class="container" style="max-width:400px; margin-top:50px;">
+  <h1>Login</h1>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required style="width:100%; padding:10px; margin-bottom:10px; background:#222; color:#fff; border:1px solid #c9a24b; border-radius:4px;">
+    <input type="password" id="password" placeholder="Password" required style="width:100%; padding:10px; margin-bottom:10px; background:#222; color:#fff; border:1px solid #c9a24b; border-radius:4px;">
+    <button type="submit" style="width:100%; padding:10px; background:#c9a24b; color:#111; border:none; font-weight:bold; cursor:pointer;">Login</button>
+  </form>
+  <p style="margin-top:10px;">Don't have an account? <a href="register.html">Register</a></p>
+</div>
+
+<footer>
+  <p>© 2025 Nomad Elite Travel</p>
+</footer>
+
+<script>
+(function renderNavbar() {
+  const navLinks = document.getElementById("nav-links");
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navLinks.innerHTML = `<a href="login.html">Login</a><a href="register.html">Register</a>`;
+  } else {
+    let email = "";
+    try { email = JSON.parse(atob(token.split('.')[1])).email; } catch { localStorage.removeItem("token"); }
+    navLinks.innerHTML = `<span style="margin-left:10px; margin-right:10px;">${email}</span>
+      <a href="profile.html">Profile</a>
+      <a href="#" id="logoutBtn">Logout</a>`;
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    });
+  }
+})();
+
+document.getElementById("loginForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  try {
+    const res = await fetch("/auth/login", {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({email, password})
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+      window.location.href = "profile.html";
+    } else {
+      alert(data.message || "Login failed");
+    }
+  } catch(err) { console.error(err); }
+});
+</script>
+</body>
+</html>
